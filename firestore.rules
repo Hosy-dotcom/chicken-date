@@ -1,0 +1,24 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // The 128-bit random ID in the shared URL is the access capability.
+    // No sign-in is used. Anyone who obtains this ID can read and change this list.
+    match /shoppingLists/{listId} {
+      function validId() { return listId.matches('^[a-f0-9]{32}$'); }
+      function validList() {
+        return request.resource.data.keys().hasAll(['revision', 'items'])
+          && request.resource.data.keys().hasOnly(['revision', 'items'])
+          && request.resource.data.revision is int
+          && request.resource.data.items is list
+          && request.resource.data.items.size() <= 200;
+      }
+      allow get: if validId();
+      allow list: if false; // Collection enumeration/querying is not allowed.
+      allow create: if validId() && validList() && request.resource.data.revision == 1;
+      allow update: if validId() && validList()
+        && request.resource.data.revision == resource.data.revision + 1;
+      // Reset empties the array and increments revision; keep the document itself.
+      allow delete: if false;
+    }
+  }
+}

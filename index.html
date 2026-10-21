@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Chicken dinner · our shared shopping list</title>
+  <meta name="referrer" content="no-referrer">
+  <meta name="description" content="Our private, shared Korean fried chicken shopping adventure.">
+  <link rel="manifest" href="/manifest.webmanifest">
+  <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="theme-color" content="#f2efe5">
+  <link rel="stylesheet" href="style.css">
+  <script type="module" src="/src/main.ts"></script>
+</head>
+<body>
+  <main>
+    <section class="hero">
+      <div><p class="eyebrow">SIDE QUEST 001 / KOREAN FRIED CHICKEN</p><h1>WINNER WINNER,<br><em>CHICKEN DINNER :P</em></h1><p class="intro">Let’s get everything for our Korean fried chicken night.</p><a class="primary" href="#pantry">START THE SIDE QUEST <span>↘</span></a></div>
+      <div class="doodle">
+        <div class="speech">THERE’S A HUNGRY<br>CAT ON BOARD!</div>
+        <svg class="pixel-cat" viewBox="0 0 64 64" role="img" aria-label="A mischievous pixel cat with a coral heart" shape-rendering="crispEdges">
+          <path fill="currentColor" d="M9 5h4v4h4v4h5v-2h16v2h5V9h4V5h4v27h-4v5h-8v5h5v7h4v-4h5V31h-4v-5h9v5h3v20h-4v5h-9v5H19v-4h-4V45h4v-5h4v-3h-9v-5H9z"/>
+          <path fill="#f2efe5" d="M13 13h4v5h4v5h-8zm30 10v-5h4v-5h1v10zM19 26h4v3h4v-3h4v7h-8v-3h-4zm18 0h4v3h4v-3h3v4h-4v3h-7zM30 35h6v3h-2v3h-2v-3h-2zM25 54h3v5h-3zm8 0h3v5h-3z"/>
+          <path fill="#ed655b" d="M25 17h4v-4h4v4h4v3h-4v4h-4v-4h-4zM1 39h4v-3h5v3h4v6h-3v3H8v3H5v-3H2v-3H1z"/>
+        </svg>
+        <span class="orbit one">✦</span><span class="orbit two">+</span><span class="cat-label">MISSION: FEED US BOTH.</span>
+      </div>
+    </section>
+    <section class="shared-panel" aria-label="Our shared list">
+      <p id="sync-status" role="status" aria-live="polite">Connecting to our shared list…</p>
+      <div class="share-controls">
+        <button id="copy-link" class="action-button action-button-secondary">Copy shared link</button>
+        <button id="reconnect" class="small-button" hidden>Reconnect</button>
+        <input id="shared-url" type="text" aria-label="Shared list link" readonly hidden>
+      </div>
+      <div class="list-tools">
+        <button id="add-item" class="action-button" data-shared disabled>+ Add ingredient</button>
+        <button id="seed-list" class="action-button action-button-secondary" data-shared hidden>Load chicken ingredients</button>
+      </div>
+    </section>
+    <section id="pantry" class="section">
+      <div class="section-title"><span class="step">01</span><div><h2>First,let's raid your kitchen.</h2><p>Tick what you already have.</p></div><span id="home-count" class="badge"></span></div>
+      <div class="pantry-grid" id="pantry-items"></div>
+      <div class="pantry-bottom"><p id="pantry-joke">A quick cupboard check before our little adventure.</p><button class="action-button" id="check-pantry" data-shared disabled>Pantry check done →</button></div>
+    </section>
+    <section class="section" id="shopping">
+      <div class="section-title"><span class="step">02</span><div><h2>Let's go shopping.</h2></div></div>
+      <div class="shops">
+        <article class="shop"><header><div><p class="eyebrow">STOP NO. 1</p><h3>Go Asia</h3></div><span class="badge" id="asia-count"></span></header><p class="shop-note">For the saucy little essentials.</p><div id="asia-items"></div></article>
+        <article class="shop"><header><div><p class="eyebrow">STOP NO. 2</p><h3>The supermarket</h3></div><span class="badge" id="market-count"></span></header><p class="shop-note">Whichever one we drive past first.</p><div id="market-items"></div></article>
+      </div>
+    </section>
+    <section class="cart section">
+      <div class="section-title"><span class="step">03</span><div><h2>In our inventory</h2></div><span class="badge" id="cart-count"></span></div>
+      <div id="cart-items" class="cart-items"></div><div class="progress-track"><div id="progress-fill"></div></div><p id="progress-text" role="status" aria-live="polite"></p>
+    </section>
+    <section class="recipe"><div class="mini-cat" aria-hidden="true">/\_/\<br>( o.o )<br>&gt; ^ &lt;</div><p class="eyebrow">AND NOW, THE SECRET RECIPE</p><h2>No recipe.<br><em>Just in my head :P</em></h2><span>♡</span></section>
+    <footer><button id="reset" data-shared disabled class="action-button action-button-secondary">Start a Fresh List ↺</button><p id="install-note">Install on iPhone: Safari → Share → Add to Home Screen. On Android: browser menu → Install app / Add to Home screen.</p></footer>
+  </main>
+  <dialog id="item-dialog" class="pantry-dialog" aria-labelledby="item-dialog-title">
+    <button type="button" id="editor-close" class="dialog-close" aria-label="Close ingredient editor">×</button>
+    <h2 id="item-dialog-title">Add ingredient</h2>
+    <form id="item-form" class="item-form">
+      <label>Ingredient<input id="item-name" maxlength="100" required autofocus></label>
+      <label>Notes / quantity<input id="item-use" maxlength="200" placeholder="e.g. 500 g · for the chicken"></label>
+      <label>Shopping stop<select id="item-shop"><option value="market">The supermarket</option><option value="asia">Go Asia</option></select></label>
+      <label class="basic-choice"><input id="item-basic" type="checkbox">Include in the judging-cat pantry check</label>
+      <p id="editor-error" role="alert"></p>
+      <button class="action-button" data-shared>Save for both of us</button>
+      <button type="button" id="delete-item" class="action-button action-button-secondary" data-shared hidden>Delete ingredient</button>
+    </form>
+  </dialog>
+  <dialog id="pantry-dialog" class="pantry-dialog" aria-labelledby="pantry-dialog-title" aria-describedby="pantry-dialog-message">
+    <form method="dialog">
+      <button class="dialog-close" aria-label="Close notification" title="Close" autofocus>×</button>
+      <div class="mini-cat" aria-hidden="true">/\_/\<br>( -.- )<br>&gt; ^ &lt;</div>
+      <p class="eyebrow">THE CAT HAS QUESTIONS</p>
+      <h2 id="pantry-dialog-title">R u jokin’?! &gt;_&lt;</h2>
+      <p id="pantry-dialog-message"></p>
+    </form>
+  </dialog>
+</body>
+</html>
